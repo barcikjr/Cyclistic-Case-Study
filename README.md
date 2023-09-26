@@ -1,34 +1,34 @@
 # Cyclistic-Case-Study
 Google Data Analytics Capstone: Case Study
 
-# Introduction
+## Introduction
 Teste1
 
-## Scenario
+### Scenario
 Teste2
 
-## About the Company
+### About the Company
 Teste3
 
-# Ask
-## Busines
+## Ask
+### Busines
 teste4
 
-## Stakeholders
+### Stakeholders
 
-# Prepare
+## Prepare
 Teste5
 
-# Process
-## Data Cleaning
-### Excel
+## Process
+### Data Cleaning
+#### Excel
 Teste6
 
-### SQL
+#### SQL
 TEste7
 
 
-# Analyze
+## Analyze
 TEste8
 
 # Share
