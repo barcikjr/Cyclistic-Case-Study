@@ -1,6 +1,8 @@
 # Cyclistic-Case-Study
 Google Data Analytics Capstone: Case Study
 
+![Google Image]([http://url/to/img.png](https://github.com/barcikjr/assets/blob/main/images/GoogleTeste.png))
+
 ## Introduction
 Teste1
 
