@@ -162,15 +162,6 @@ FROM course50.cyclistic.202102
 ```
 * REPETY THE UNION ALL COMMAND TO ALL OUR 12 FILES or MORE IF YOU WANT.
 
-* To found no misspelling or issue use this command:
-
-```
-SELECT DISTINCT [string column]
-FROM course50.cyclistic.bikeshare
-```
-
-
-
 
 ## Analyze
 ### R
