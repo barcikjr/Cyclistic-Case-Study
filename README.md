@@ -98,6 +98,14 @@ And least command is this process, we can see examined our data using this comam
 dim(divvy_tripdata_raw)
 ```
 
+In the clean process data for analysis to prepare we can use the strptime() and after that, we can use str() to show effective.
+To removed unneecssary data we can use filter()
+
+* Finalized our data cleaning process we can export the csv file to realized analysis in Tableau.
+
+
+
+
 
 ### SQL
 
@@ -167,8 +175,6 @@ FROM course50.cyclistic.bikeshare
 ## Analyze
 ### R
 
-
-### SQL
 
 
 # Share
