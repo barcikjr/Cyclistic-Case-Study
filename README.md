@@ -34,46 +34,142 @@ After that we need understand the credibility and integrity of the data - ROCCC
 ## Process
 ### Data Cleaning
 The format our data is CSV. All the table we have same set of column names:
-* ride_id, character, unique primary key for each ride trip
-* rideable_type, character, the type of bike used in bike trip
-* started_at, time-date data, the starting date and time for each bike trip
-* ended_at, time-date data, the ending date and time for each bike trip
-* start_station_name, character, starting station name for the bike trip
-* start_station_id, character, ID used for identifying starting station
-* end_station_name, character, ending station name for the bike trip
-* end_station_id, character, ID used for identifying ending station
-* start_lat, geographic data, latitude of starting station of the bike trip
-* start_lng, geographic data, longitude of starting station of the bike trip
-* end_lat, geographic data, latitude of ending station of the bike trip
-* end_lng, geographic data, longitude of ending station of the bike trip
-* member_casual, character, the member status of bike user, fell into only casual (user) and member
+* ride_id;
+* rideable_type;
+* started_at;
+* ended_at;
+* start_station_name;
+* start_station_id;
+* end_station_name;
+* end_station_id;
+* start_lat;
+* start_lng;
+* end_lat;
+* end_lng;
+* member_casual;
 
 #### Excel
 For formating our data we can use Power Query and this tool can automatic process to combine files in a single, but we can use programmer languagues to create one fast process.
 For using this we can go in this:
-* PICTURE
 
-After rename our datafiles.
+![Power Query](images/01_Power_Query-Get-Data.png)
+![Power Query](images/01_Power_Query-Transform.png)
 
+* Wait: Use this method is not recommend because we had a lot rows and maximum number of rows in Power Query is limitation in 1,048,576.
+* To use this tool we need divide in multiples files and because this is most recommend use programmer. And in this case we use R or SQL.
 
 #### R
 Similar in Power Query, we can solve our problem in fast way. Import our CSV and renamed.
 After rename, we can wrangle data and combine into a single file.
-* PICTURE
+
+To read and rename our data we use this command:
+
+```
+jan21 <- read_csv('202101-divvy-tripdata.csv')
+```
 
 To exam our process, we use this command:
-* insert line code
 
-  For see the head of the combined dataset, we use this command:
-* insert line code
+```
+colnames(jan21)
+```
+
+To compare our dataset file we use this command:
+
+```
+compare_df_cols(jan21, fev21, mar21, apr21, may21, jun21, jul21, aug21, sep21, oct21, nov21, dec21)
+```
+
+After we see than our data is uniform we can combined our data in single dataset file:
+  
+```
+divvy_tripdata_raw<- rbind(jan21, feb21, mar21, apr21, may21, jun21, jul21, aug21, sep21, oct21, nov21, dec21)
+```
+
+For see the head of the combined dataset, we use this command:
+
+```
+head(divvy_tripdata_raw)
+```
+
+And least command is this process, we can see examined our data using this comamand:
+
+```
+dim(divvy_tripdata_raw)
+```
 
 
 ### SQL
-TEste7
+
+Similar when we used R, in data cleaning we can use SQL to combine and clean our data.
+In this case, we use BigQuery`s and une the UNION operator to combine all the files into one table with the name "2021_tripdata"
+```
+SELECT
+      ride_id, 
+      rideable_type,
+      started_at,
+      ended_at,
+      start_station_name,
+      start_station_id,
+      end_station_name,
+      end_station_id,
+      start_lat,
+      start_lng,
+      end_lat,
+      end_lng,
+      member_casual
+FROM course50.cyclistic.202101
+UNION ALL
+SELECT
+      ride_id, 
+      rideable_type,
+      started_at,
+      ended_at,
+      start_station_name,
+      start_station_id,
+      end_station_name,
+      end_station_id,
+      start_lat,
+      start_lng,
+      end_lat,
+      end_lng,
+      member_casual
+FROM course50.cyclistic.202102
+UNION ALL
+SELECT
+      ride_id, 
+      rideable_type,
+      started_at,
+      ended_at,
+      start_station_name,
+      start_station_id,
+      end_station_name,
+      end_station_id,
+      start_lat,
+      start_lng,
+      end_lat,
+      end_lng,
+      member_casual
+FROM course50.cyclistic.202102
+```
+* REPETY THE UNION ALL COMMAND TO ALL OUR 12 FILES or MORE IF YOU WANT.
+
+* To found no misspelling or issue use this command:
+
+```
+SELECT DISTINCT [string column]
+FROM course50.cyclistic.bikeshare
+```
+
+
 
 
 ## Analyze
-TEste8
+### R
+
+
+### SQL
+
 
 # Share
 Teste9
