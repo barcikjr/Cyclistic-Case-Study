@@ -62,9 +62,16 @@ For using this we can go in this:
 Similar in Power Query, we can solve our problem in fast way. Import our CSV and renamed.
 After rename, we can wrangle data and combine into a single file.
 
-To read and rename our data we use this command:
+The first think to do is install packages.
+```
+install.packages("tidyverse")
+library(tidyverse)
+```
+
+Now its important open our path and read our file. To do this use this command:
 
 ```
+setwd('C:/YOUR_PATH')
 jan21 <- read_csv('202101-divvy-tripdata.csv')
 ```
 
@@ -98,73 +105,105 @@ And least command is this process, we can see examined our data using this comam
 dim(divvy_tripdata_raw)
 ```
 
-In the clean process data for analysis to prepare we can use the strptime() and after that, we can use str() to show effective.
-To removed unneecssary data we can use filter()
+In the clean process data for analysis to prepare we need transform our data using this code:
+```
+divvy_tripdata_raw$started_at = strptime(divvy_tripdata_raw$started_at, "%Y-%m-%d %H:%M:%S")
+divvy_tripdata_raw$ended_at = strptime(divvy_tripdata_raw$ended_at, "%Y-%m-%d %H:%M:%S")
+
+str(divvy_tripdata_raw)
+
+divvy_tripdata_raw$date <- as.Date(divvy_tripdata_raw$started_at)
+divvy_tripdata_raw$month <- format(as.Date(divvy_tripdata_raw$date), "%m")
+divvy_tripdata_raw$day <- format(as.Date(divvy_tripdata_raw$date), "%d")
+divvy_tripdata_raw$year <- format(as.Date(divvy_tripdata_raw$date), "%Y")
+divvy_tripdata_raw$day_of_week <- format(as.Date(divvy_tripdata_raw$date), "%A")
+divvy_tripdata_raw$ride_length <- difftime(divvy_tripdata_raw$ended_at, divvy_tripdata_raw$started_at)
+
+str(divvy_tripdata_raw)
+```
+
+To removed unneecssary data we this commands:
+
+```
+
+unique(divvy_tripdata_raw$member_casual)
+
+unique(divvy_tripdata_raw$rideable_type)
+
+sum(duplicated(divvy_tripdata_raw$ride_id))
+
+divvy_tripdata21<-divvy_tripdata_raw%>%
+  filter(ride_length>0)
+
+divvy_tripdata_withstation <- divvy_tripdata21 %>%
+  drop_na()
+
+nrow(divvy_tripdata_withstation)
+
+summary(divvy_tripdata_withstation)
+```
+
 
 * Finalized our data cleaning process we can export the csv file to realized analysis in Tableau.
-
-
-
-
-
-### SQL
-
-Similar when we used R, in data cleaning we can use SQL to combine and clean our data.
-In this case, we use BigQuery`s and une the UNION operator to combine all the files into one table with the name "2021_tripdata"
 ```
-SELECT
-      ride_id, 
-      rideable_type,
-      started_at,
-      ended_at,
-      start_station_name,
-      start_station_id,
-      end_station_name,
-      end_station_id,
-      start_lat,
-      start_lng,
-      end_lat,
-      end_lng,
-      member_casual
-FROM course50.cyclistic.202101
-UNION ALL
-SELECT
-      ride_id, 
-      rideable_type,
-      started_at,
-      ended_at,
-      start_station_name,
-      start_station_id,
-      end_station_name,
-      end_station_id,
-      start_lat,
-      start_lng,
-      end_lat,
-      end_lng,
-      member_casual
-FROM course50.cyclistic.202102
-UNION ALL
-SELECT
-      ride_id, 
-      rideable_type,
-      started_at,
-      ended_at,
-      start_station_name,
-      start_station_id,
-      end_station_name,
-      end_station_id,
-      start_lat,
-      start_lng,
-      end_lat,
-      end_lng,
-      member_casual
-FROM course50.cyclistic.202102
+write.csv(divvy_tripdata_withstation, "trips 2021.csv")
 ```
-* REPETY THE UNION ALL COMMAND TO ALL OUR 12 FILES or MORE IF YOU WANT.
 
 
 ## Analyze
 ### R
+To start our analyze we use summerize command. To show numbers member_casual, this commmand is used:
+```
+executive_summ <- divvy_tripdata_withstation %>%
+group_by(member_casual) %>%
+summarize(n=n())%>%
+mutate(percentage = n*100/sum(n))
+
+view(executive_summ)
+
+ggplot(data = divvy_tripdata_withstation, aes(x = member_casual, fill = member_casual)) +
+  geom_bar() +
+  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5) +
+  labs(title = "User count: Member vs Casual")
+```
+
+In this situation, we can see this:
+
+![Summary_table_1](images/R/Summary_Table_1.png)
+
+![Rplot_1](images/R/Rplot_1.png)
+
+
+* To analyze the average in 2021 we use this code:
+```
+divvy_tripdata_withstation$ride_length <- as.numeric(divvy_tripdata_withstation$ride_length)
+
+executive_summ_2 <- divvy_tripdata_withstation %>%
+  group_by(member_casual) %>%
+  summarize(avg_ride_length = mean(ride_length))
+
+view(executive_summ_2)
+```
+
+![Summary_Table_2](images/R/Summary_Table_2.png)
+
+* And to understand the rideable_type we use this command:
+```
+executive_summ_3 <- divvy_tripdata_withstation %>%
+  group_by(member_casual, rideable_type) %>%
+  summarize(n=n())%>%
+  mutate(percentage = n*100/sum(n))
+
+view(executive_summ_3)
+
+ggplot(data = executive_summ_3, aes(x = member_casual, y=percentage, fill = rideable_type)) +
+  geom_col() +
+  labs(title = "Bikes Types used (Member vs Casual)")
+```
+
+![Summary_Table_3](images/R/Summary_Table_3.png)
+
+![Rplot_2](images/R/Rplot_2.png)
 
 
 
