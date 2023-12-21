@@ -205,10 +205,3 @@ ggplot(data = executive_summ_3, aes(x = member_casual, y=percentage, fill = ride
 
 ![Rplot_2](images/R/Rplot_2.png)
 
-
-
-# Share
-Teste9
-
-# Act
-Teste10
